@@ -35,11 +35,12 @@ export const onRequest = async ({ request, env }: { request: Request; env: { WEC
     })
   }
 
+  const safe = (v: string) => v.toString().trim().slice(0, 1000)
   const content =
     `新咨询通知\n` +
-    `姓名：${name}\n` +
-    `联系方式：${phone}\n` +
-    `内容：${message}\n` +
+    `姓名：${safe(name)}\n` +
+    `联系方式：${safe(phone)}\n` +
+    `内容：${safe(message)}\n` +
     `时间：${new Date().toLocaleString('zh-CN', { hour12: false })}`
 
   const payload = {
@@ -53,9 +54,17 @@ export const onRequest = async ({ request, env }: { request: Request; env: { WEC
     body: JSON.stringify(payload),
   })
 
-  if (!res.ok) {
-    const text = await res.text()
-    return new Response(JSON.stringify({ error: 'Webhook failed', detail: text }), {
+  let resultText = ''
+  let resultJson: { errcode?: number; errmsg?: string } | null = null
+  try {
+    resultText = await res.text()
+    resultJson = JSON.parse(resultText)
+  } catch {
+    // ignore
+  }
+  if (!res.ok || (resultJson && resultJson.errcode !== 0)) {
+    const detail = resultJson ?? resultText
+    return new Response(JSON.stringify({ error: 'Webhook failed', detail }), {
       status: 502,
       headers: { 'Content-Type': 'application/json' },
     })

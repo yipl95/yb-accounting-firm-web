@@ -10,23 +10,38 @@ export const ConsultationModal: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const contactPhone = import.meta.env.VITE_CONTACT_PHONE ?? '400-123-4567';
   const wechatId = import.meta.env.VITE_WECHAT_ID ?? 'yuanbao_kefu';
   const wechatQr = import.meta.env.VITE_WECHAT_QR_URL ?? wechatQrDefault;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
     setIsLoading(true);
-    await submitConsultation(formData);
-    setIsLoading(false);
-    setIsSuccess(true);
+    try {
+      await submitConsultation(formData);
+      setIsLoading(false);
+      setIsSuccess(true);
     
-    // Reset after success
-    setTimeout(() => {
-      setIsSuccess(false);
-      setFormData({ name: '', phone: '', message: '' });
-      closeModal();
-    }, 2000);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setFormData({ name: '', phone: '', message: '' });
+        closeModal();
+      }, 2000);
+    } catch (err) {
+      setIsLoading(false);
+      const msg =
+        typeof err === 'string'
+          ? err
+          : (err as { message?: string }).message || '';
+      const lower = msg.toLowerCase();
+      if (lower.includes('webhook not configured')) {
+        setErrorMsg('提交失败：通知服务暂不可用，请稍后再试或通过上方联系方式直接联系。');
+      } else {
+        setErrorMsg('提交失败，请稍后再试或通过上方联系方式直接联系。');
+      }
+    }
   };
   
   const copyWechatId = async () => {
@@ -109,6 +124,11 @@ export const ConsultationModal: React.FC = () => {
                     </div>
                   </div>
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {errorMsg && (
+                      <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                        {errorMsg}
+                      </div>
+                    )}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
                       <input
