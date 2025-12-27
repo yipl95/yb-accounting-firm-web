@@ -56,7 +56,7 @@ export const ConsultationModal: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl pointer-events-auto overflow-y-auto max-h-[85vh]"
+              className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl pointer-events-auto overflow-y-auto max-h-[85vh]"
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               <div className="p-4 sm:p-6">
@@ -80,6 +80,34 @@ export const ConsultationModal: React.FC = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="border border-gray-200 rounded-xl p-4">
+                    <h4 className="text-base font-semibold text-gray-900 mb-3">也可直接添加客服微信</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-600">电话：</span>
+                        <span className="font-medium text-gray-900">{contactPhone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-600">微信号：</span>
+                        <span className="font-medium text-gray-900">{wechatId}</span>
+                        <button
+                          onClick={copyWechatId}
+                          className="ml-auto text-sm px-3 py-1 rounded-md border border-gray-300 hover:border-gray-400"
+                        >
+                          {copied ? '已复制' : '复制'}
+                        </button>
+                      </div>
+                      <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
+                        <img
+                          src={wechatQr}
+                          alt="微信二维码"
+                          className="w-full max-w-[180px] md:max-w-[240px] mx-auto rounded-md"
+                          loading="lazy"
+                        />
+                        <p className="text-xs text-gray-500 mt-2 text-center">扫码添加客服，快速沟通</p>
+                      </div>
+                    </div>
+                  </div>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
@@ -114,52 +142,26 @@ export const ConsultationModal: React.FC = () => {
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       />
                     </div>
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 size={20} className="animate-spin" />
-                          提交中...
-                        </>
-                      ) : (
-                        '提交咨询'
-                      )}
-                    </button>
+                    <div className="sticky bottom-0 bg-white pt-2">
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 size={20} className="animate-spin" />
+                            提交中...
+                          </>
+                        ) : (
+                          '提交咨询'
+                        )}
+                      </button>
+                    </div>
                     <p className="text-xs text-center text-gray-400 mt-4">
                       提交即表示您同意我们的隐私政策，我们会严格保密您的信息。
                     </p>
                   </form>
-                  <div className="border border-gray-200 rounded-xl p-4">
-                    <h4 className="text-base font-semibold text-gray-900 mb-3">也可直接添加客服微信</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">电话：</span>
-                        <span className="font-medium text-gray-900">{contactPhone}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">微信号：</span>
-                        <span className="font-medium text-gray-900">{wechatId}</span>
-                        <button
-                          onClick={copyWechatId}
-                          className="ml-auto text-sm px-3 py-1 rounded-md border border-gray-300 hover:border-gray-400"
-                        >
-                          {copied ? '已复制' : '复制'}
-                        </button>
-                      </div>
-                      <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
-                        <img
-                          src={wechatQr}
-                          alt="微信二维码"
-                          className="w-full max-w-[220px] md:max-w-[260px] mx-auto rounded-md"
-                          loading="lazy"
-                        />
-                        <p className="text-xs text-gray-500 mt-2 text-center">扫码添加客服，快速沟通</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
               </div>
