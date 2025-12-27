@@ -2,7 +2,12 @@ import React, { useEffect } from 'react';
 
 declare global {
   interface Window {
-    CozeWebSDK: any;
+    CozeWebSDK: {
+      WebChatClient: new (options: {
+        config: { bot_id: string };
+        componentProps?: { title?: string };
+      }) => void;
+    };
   }
 }
 
@@ -18,8 +23,8 @@ export const CozeWidget: React.FC = () => {
       if (window.CozeWebSDK) {
         new window.CozeWebSDK.WebChatClient({
           config: {
-            // Replace with your actual Bot ID from Coze
-            bot_id: 'YOUR_BOT_ID_HERE', 
+            // Get Bot ID from environment variables
+            bot_id: import.meta.env.VITE_COZE_BOT_ID || 'YOUR_BOT_ID_HERE', 
           },
           componentProps: {
             title: '元宝智能助手',

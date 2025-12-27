@@ -13,13 +13,19 @@ export const useStore = create<ConsultationState>((set) => ({
   openModal: () => set({ isModalOpen: true }),
   closeModal: () => set({ isModalOpen: false }),
   submitConsultation: async (data) => {
-    // In a real app, you would call your backend API here
-    // which would then interact with WeChat API
-    console.log('Submitting consultation:', data);
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('Consultation submitted successfully. Notification sent to WeChat (Mock).');
+    try {
+      const res = await fetch('/api/consult', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const detail = await res.text();
+        throw new Error(detail || 'Submit failed');
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   },
 }));
