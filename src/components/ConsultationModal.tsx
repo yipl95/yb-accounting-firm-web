@@ -35,13 +35,14 @@ export const ConsultationModal: React.FC = () => {
             onClick={closeModal}
             className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
           />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl z-[70] overflow-hidden"
-          >
-            <div className="p-6">
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto"
+            >
+              <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-gray-900">免费咨询</h3>
                 <button
@@ -115,7 +116,8 @@ export const ConsultationModal: React.FC = () => {
                 </form>
               )}
             </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
