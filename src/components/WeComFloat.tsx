@@ -7,7 +7,14 @@ export const WeComFloat: React.FC = () => {
     'https://work.weixin.qq.com/kfid/kfced2ab49d46dacaf9'
 
   const handleClick = () => {
-    window.open(link, '_blank', 'noopener,noreferrer')
+    const ua = navigator.userAgent.toLowerCase()
+    const isWechat = ua.includes('micromessenger')
+    const isMobile = /iphone|android|mobile/.test(ua)
+    if (isWechat || isMobile) {
+      window.location.href = link
+    } else {
+      window.open(link, '_blank', 'noopener,noreferrer')
+    }
   }
 
   return (
