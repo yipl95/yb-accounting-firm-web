@@ -86,10 +86,25 @@ export const WeComFloat: React.FC = () => {
     if (!startRef.current.moved) handleClick()
   }
 
+  const [visible, setVisible] = useState(true)
+  useEffect(() => {
+    let t: number | undefined
+    const onScroll = () => {
+      setVisible(false)
+      if (t) clearTimeout(t)
+      t = window.setTimeout(() => setVisible(true), 250)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (t) clearTimeout(t)
+    }
+  }, [])
+
   return (
     <div
       ref={ref}
-      className="fixed z-[80]"
+      className={`fixed z-[80] transition-all duration-200 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}
       style={{ left: pos.x, top: pos.y, touchAction: 'none' }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
