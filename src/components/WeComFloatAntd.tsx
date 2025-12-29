@@ -4,7 +4,7 @@ import { MessageOutlined, UserAddOutlined, CustomerServiceOutlined, CommentOutli
 import { useStore } from '../store/useStore'
 
 export const WeComFloatAntd: React.FC = () => {
-  const { openModal } = useStore()
+  const { openModal, isModalOpen } = useStore()
   const chatLink =
     import.meta.env.VITE_WECHAT_KF_LINK ??
     'https://work.weixin.qq.com/kfid/kfced2ab49d46dacaf9'
@@ -129,8 +129,8 @@ export const WeComFloatAntd: React.FC = () => {
     >
       <div
         ref={ref}
-        className={`fixed z-[80] transition-opacity duration-200 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        style={{ right: pos.right, bottom: pos.bottom, touchAction: 'none' }}
+        className={`fixed transition-opacity duration-200 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'} ${isModalOpen ? 'pointer-events-none' : ''}`}
+        style={{ right: pos.right, bottom: pos.bottom, touchAction: 'none', zIndex: isModalOpen ? 30 : 80 }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
