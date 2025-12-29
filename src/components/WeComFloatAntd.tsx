@@ -18,11 +18,17 @@ export const WeComFloatAntd: React.FC = () => {
   const [isMobile] = useState(() => /iphone|android|mobile/.test(navigator.userAgent.toLowerCase()))
   const ref = useRef<HTMLDivElement | null>(null)
   const [pos, setPos] = useState<{ right: number; bottom: number }>(() => ({
-    right: margin + 20,
+    right: margin,
     bottom: margin + 220,
   }))
   const [dragging, setDragging] = useState(false)
-  const startRef = useRef<{ dx: number; dy: number; moved: boolean }>({ dx: 0, dy: 0, moved: false })
+  const startRef = useRef<{ dx: number; dy: number; startX: number; startY: number; isDown: boolean }>({
+    dx: 0,
+    dy: 0,
+    startX: 0,
+    startY: 0,
+    isDown: false,
+  })
   // margin defined above
 
   useEffect(() => {
@@ -75,8 +81,10 @@ export const WeComFloatAntd: React.FC = () => {
     const el = ref.current
     if (!el) return
     el.setPointerCapture(e.pointerId)
-    setDragging(true)
-    startRef.current.moved = false
+    setDragging(false)
+    startRef.current.isDown = true
+    startRef.current.startX = e.clientX
+    startRef.current.startY = e.clientY
     const rect = el.getBoundingClientRect()
     const currentLeft = window.innerWidth - pos.right - rect.width
     const currentTop = window.innerHeight - pos.bottom - rect.height
@@ -85,30 +93,36 @@ export const WeComFloatAntd: React.FC = () => {
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!dragging) return
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
+    const elMove = ref.current
+    if (!elMove) return
+    if (!startRef.current.isDown) return
+    if (e.buttons === 0) return
+    // if not dragging yet, check threshold to start drag
+    if (!dragging) {
+      const dist = Math.max(Math.abs(e.clientX - startRef.current.startX), Math.abs(e.clientY - startRef.current.startY))
+      if (dist < 4) return
+      setDragging(true)
+    }
+    const rect = elMove.getBoundingClientRect()
     const nxLeft = e.clientX - startRef.current.dx
     const nyTop = e.clientY - startRef.current.dy
     const maxLeft = window.innerWidth - rect.width - margin
     const maxTop = window.innerHeight - rect.height - margin
     const clampedLeft = Math.min(Math.max(margin, nxLeft), maxLeft)
     const clampedTop = Math.min(Math.max(margin, nyTop), maxTop)
-    const changed =
-      Math.abs(window.innerWidth - pos.right - rect.width - clampedLeft) > 3 ||
-      Math.abs(window.innerHeight - pos.bottom - rect.height - clampedTop) > 3
-    if (changed) startRef.current.moved = true
     const newRight = Math.max(margin, window.innerWidth - clampedLeft - rect.width)
     const newBottom = Math.max(margin, window.innerHeight - clampedTop - rect.height)
     setPos({ right: newRight, bottom: newBottom })
   }
 
   const onPointerUp = () => {
+    const elUp = ref.current
+    if (!elUp) return
+    const wasDragging = dragging
     setDragging(false)
-    const el = ref.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
+    startRef.current.isDown = false
+    if (!wasDragging) return
+    const rect = elUp.getBoundingClientRect()
     const currentLeft = window.innerWidth - pos.right - rect.width
     const maxLeft = window.innerWidth - rect.width - margin
     const sideLeft = currentLeft + rect.width / 2 < window.innerWidth / 2
