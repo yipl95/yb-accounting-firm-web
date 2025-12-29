@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { motion, AnimatePresence } from 'framer-motion';
-import wechatQrDefault from '../assets/wx_kefu.jpg';
 
 export const ConsultationModal: React.FC = () => {
   const { isModalOpen, closeModal, submitConsultation } = useStore();
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const contactPhone = import.meta.env.VITE_CONTACT_PHONE ?? '400-123-4567';
-  const wechatId = import.meta.env.VITE_WECHAT_ID ?? 'yuanbao_kefu';
-  const wechatQr = import.meta.env.VITE_WECHAT_QR_URL ?? wechatQrDefault;
+  // removed contact phone usage in modal
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,23 +33,14 @@ export const ConsultationModal: React.FC = () => {
           : (err as { message?: string }).message || '';
       const lower = msg.toLowerCase();
       if (lower.includes('webhook not configured')) {
-        setErrorMsg('提交失败：通知服务暂不可用，请稍后再试或通过上方联系方式直接联系。');
+        setErrorMsg('提交失败：通知服务暂不可用，请稍后再试或通过悬浮球入口联系。');
       } else {
-        setErrorMsg('提交失败，请稍后再试或通过上方联系方式直接联系。');
+        setErrorMsg('提交失败，请稍后再试或通过悬浮球入口联系。');
       }
     }
   };
   
-  const copyWechatId = async () => {
-    if (!wechatId) return;
-    try {
-      await navigator.clipboard.writeText(wechatId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* noop */
-    }
-  };
+  // removed wechat copy helper
 
   return (
     <AnimatePresence>
@@ -71,12 +58,12 @@ export const ConsultationModal: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl pointer-events-auto overflow-y-auto max-h-[85vh]"
+              className="w-full max-w-xl bg-white rounded-2xl shadow-2xl pointer-events-auto overflow-y-auto max-h-[85vh]"
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center sticky top-0 bg-white z-10 py-3 mb-4 border-b">
-                <h3 className="text-xl font-bold text-gray-900">免费咨询</h3>
+                <h3 className="text-xl font-bold text-gray-900">留言</h3>
                 <button
                   onClick={closeModal}
                   className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -91,38 +78,10 @@ export const ConsultationModal: React.FC = () => {
                     <CheckCircle size={32} />
                   </div>
                   <h4 className="text-xl font-bold text-gray-900 mb-2">提交成功</h4>
-                  <p className="text-gray-500">我们的专业顾问将尽快通过微信与您联系。</p>
+                  <p className="text-gray-500">我们的专业顾问将尽快与您联系。</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="border border-gray-200 rounded-xl p-4">
-                    <h4 className="text-base font-semibold text-gray-900 mb-3">也可直接添加客服微信</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">电话：</span>
-                        <span className="font-medium text-gray-900">{contactPhone}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-600">微信号：</span>
-                        <span className="font-medium text-gray-900">{wechatId}</span>
-                        <button
-                          onClick={copyWechatId}
-                          className="ml-auto text-sm px-3 py-1 rounded-md border border-gray-300 hover:border-gray-400"
-                        >
-                          {copied ? '已复制' : '复制'}
-                        </button>
-                      </div>
-                      <div className="rounded-lg bg-gray-50 border border-gray-200 p-3">
-                        <img
-                          src={wechatQr}
-                          alt="微信二维码"
-                          className="w-full max-w-[180px] md:max-w-[240px] mx-auto rounded-md"
-                          loading="lazy"
-                        />
-                        <p className="text-xs text-gray-500 mt-2 text-center">扫码添加客服，快速沟通</p>
-                      </div>
-                    </div>
-                  </div>
+                <div className="grid grid-cols-1 gap-4">
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {errorMsg && (
                       <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -152,7 +111,7 @@ export const ConsultationModal: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">咨询内容</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">留言内容</label>
                       <textarea
                         required
                         rows={4}
@@ -174,7 +133,7 @@ export const ConsultationModal: React.FC = () => {
                             提交中...
                           </>
                         ) : (
-                          '提交咨询'
+                          '提交留言'
                         )}
                       </button>
                     </div>
