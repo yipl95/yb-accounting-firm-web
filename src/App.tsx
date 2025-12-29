@@ -3,7 +3,7 @@ import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { ConsultationModal } from './components/ConsultationModal';
 import { CozeWidget } from './components/CozeWidget';
-import { WeComFloat } from './components/WeComFloat';
+import { WeComFloatAntd } from './components/WeComFloatAntd';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
       <Footer />
       <ConsultationModal />
       <CozeWidget />
-      <WeComFloat />
+      <WeComFloatAntd />
     </div>
   );
 }

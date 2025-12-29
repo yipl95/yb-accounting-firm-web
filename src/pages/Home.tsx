@@ -74,13 +74,13 @@ export const Home: React.FC = () => {
           >
             <button
               onClick={openModal}
-              className="px-8 py-4 bg-primary text-white rounded-lg font-bold text-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+              className="px-8 py-4 bg-primary text白 text-white rounded-lg font-bold text-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
             >
               免费获取方案 <ArrowRight size={20} />
             </button>
             <a
               href="#services"
-              className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm text白 text-white border border白/20 border-white/20 rounded-lg font-bold text-lg hover:bg白/20 transition-colors"
             >
               了解更多服务
             </a>
