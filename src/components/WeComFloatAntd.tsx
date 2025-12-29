@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FloatButton } from 'antd'
-import { MessageOutlined, UserAddOutlined } from '@ant-design/icons'
+import { MessageOutlined, UserAddOutlined, CustomerServiceOutlined } from '@ant-design/icons'
 
 export const WeComFloatAntd: React.FC = () => {
   const chatLink =
@@ -43,7 +43,8 @@ export const WeComFloatAntd: React.FC = () => {
       shape="circle"
       trigger={isMobile ? 'click' : 'hover'}
       style={{ right: 16, bottom: 16, opacity: visible ? 1 : 0, transition: 'opacity .2s' }}
-      icon={<MessageOutlined />}
+      icon={<CustomerServiceOutlined />}
+      type="primary"
     >
       <FloatButton
         icon={<MessageOutlined />}
